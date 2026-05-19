@@ -1,0 +1,108 @@
+@import "tailwindcss";
+
+@theme {
+  --color-blue: #086CA8;
+  --color-blue-deep: #054F7A;
+  --color-blue-light: #2A8CC4;
+  --color-blue-pale: #A8D4EC;
+  --color-white: #FCFFFF;
+  --color-bg-white: #FCFFFF;
+  --color-bg-section: #F2F8FC;
+  --color-bg-soft: #E8F3FA;
+  --color-bg-dark: #086CA8;
+  --color-bg-darker: #054F7A;
+  --color-bg-mid: #0A7BBE;
+  --color-wood: #C4956A;
+  --color-wood-light: #DEB896;
+  --color-wood-dark: #8B6340;
+  --color-gold: #D4922A;
+  --color-gold-light: #F0BC6A;
+  --color-text-main: #031E2E;
+  --color-text-muted: #3A6070;
+  
+  --font-display: "Cormorant Garamond", serif;
+  --font-sans: "Jost", sans-serif;
+  --font-mono: "DM Mono", monospace;
+  --font-hand: "Caveat", cursive;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-sans);
+    color: var(--color-text-main);
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+  }
+}
+
+.glass-card {
+  backdrop-filter: blur(8px);
+  background: rgba(252, 255, 255, 0.08);
+  border: 1px solid rgba(252, 255, 255, 0.15);
+}
+
+.section-white {
+  background-color: var(--color-bg-white);
+  color: var(--color-text-main);
+}
+
+.section-blue {
+  background-color: var(--color-bg-dark);
+  color: var(--color-white);
+}
+
+.wood-underline {
+  position: relative;
+}
+
+.wood-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 40px;
+  height: 1px;
+  background-color: var(--color-wood);
+  transform-origin: left;
+}
+
+/* Animations for waves and reveals */
+@keyframes waveFlow {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.wave-animation {
+  animation: waveFlow 20s linear infinite;
+}
+
+.text-reveal {
+  overflow: hidden;
+  display: inline-block;
+}
+
+.premium-texture {
+  position: relative;
+}
+
+.premium-texture::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.floating {
+  animation: floating 3s ease-in-out infinite;
+}
+
+@keyframes floating {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "Smażalnia Ryb - Wigry 5",
+  "description": "Strona internetowa Smażalni Ryb Wigry 5 - pyszne ryby, camping i noclegi w sercu Mazur.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
