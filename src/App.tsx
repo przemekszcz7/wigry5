@@ -75,6 +75,7 @@ const SectionTitle = ({ title, light = false }: { title: string; light?: boolean
       <motion.div 
         initial={{ scaleX: 0 }}
         whileInView={{ scaleX: 1 }}
+        viewport={{ once: true, margin: "-20px" }}
         transition={{ duration: 1, ease: "circOut" }}
         className="absolute -bottom-2 left-0 w-10 h-[1px] bg-wood origin-left"
       />
@@ -86,6 +87,7 @@ export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
+  const [isGalleryExpanded, setIsGalleryExpanded] = useState(false);
   const { scrollY } = useScroll();
   
   useEffect(() => {
@@ -118,7 +120,7 @@ export default function App() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
 
   return (
-    <div className="min-h-screen bg-white premium-texture">
+    <div className="min-h-screen bg-white premium-texture overflow-x-hidden">
       {/* Lightbox */}
       {selectedImage !== null && (
         <motion.div 
@@ -264,16 +266,22 @@ export default function App() {
       {/* Main Sections Wrapper */}
       <main>
         {/* About / Intro Section - WHITE */}
-        <section id="o-nas" className="section-white py-32 md:py-48 px-6 relative">
+        <section id="o-nas" className="section-white py-32 md:py-48 px-6 relative overflow-hidden">
           <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-24 items-center">
             <motion.div 
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "-100px" }}
               className="relative"
             >
               <div className="aspect-[4/5] bg-bg-section overflow-hidden rounded-sm border-[1px] border-wood-light/30 shadow-[0_40px_100px_-20px_rgba(3,30,46,0.15)] relative">
-                <img src={IMAGES[5]} alt="Klimat Wigier" className="w-full h-full object-cover" />
+                <img 
+                  src={IMAGES[5]} 
+                  alt="Klimat Wigier" 
+                  className="w-full h-full object-cover" 
+                  loading="lazy"
+                  decoding="async"
+                />
               </div>
               
               <motion.div 
@@ -348,8 +356,8 @@ export default function App() {
                   key={idx}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: idx * 0.1 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ delay: idx * 0.05 }}
                   whileHover={{ y: -15 }}
                   className="glass-card p-10 group transition-all duration-500 border-white/5 bg-white/5"
                 >
@@ -373,7 +381,7 @@ export default function App() {
         <WaveToWhite />
 
         {/* Accommodation Section - WHITE */}
-        <section id="noclegi" className="section-white py-32 px-6">
+        <section id="noclegi" className="section-white py-32 px-6 overflow-hidden">
           <div className="max-w-7xl mx-auto flex flex-col gap-32">
             <div className="grid md:grid-cols-2 gap-20 items-center">
               <div>
@@ -408,7 +416,13 @@ export default function App() {
               </div>
               <div className="relative group">
                 <div className="aspect-video bg-bg-section overflow-hidden rounded-sm shadow-2xl">
-                  <img src={IMAGES[0]} alt="Camping Wigry 5" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                  <img 
+                    src={IMAGES[0]} 
+                    alt="Camping Wigry 5" 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                    loading="lazy"
+                    decoding="async"
+                  />
                 </div>
                 {/* Floating Wood Accent */}
                 <div className="absolute -top-6 -right-6 w-32 h-32 border-wood border-b-[2px] border-r-[2px] z-[-1]" />
@@ -428,14 +442,16 @@ export default function App() {
             </div>
 
             <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6">
-              {IMAGES.map((img, idx) => (
+              {(isGalleryExpanded ? IMAGES : IMAGES.slice(0, 8)).map((img, idx) => (
                 <motion.div 
                   key={idx}
-                  initial={{ opacity: 0, y: 20 }}
+                  layout="position"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: idx * 0.05 }}
-                  onClick={() => openLightbox(idx)}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ duration: 0.4, delay: idx * 0.02 }}
+                  onClick={() => openLightbox(isGalleryExpanded ? idx : idx)}
                   className="relative group overflow-hidden bg-blue-deep rounded-sm border border-white/10 cursor-zoom-in"
                 >
                   <img 
@@ -443,6 +459,7 @@ export default function App() {
                     alt={`Galeria ${idx}`} 
                     className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105"
                     loading="lazy"
+                    decoding="async"
                   />
                   <div className="absolute inset-0 bg-blue-deep/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <div className="w-14 h-14 rounded-full border border-white/50 flex items-center justify-center text-white backdrop-blur-sm">
@@ -452,6 +469,18 @@ export default function App() {
                 </motion.div>
               ))}
             </div>
+
+            {IMAGES.length > 8 && (
+              <div className="mt-20 text-center">
+                <button 
+                  onClick={() => setIsGalleryExpanded(!isGalleryExpanded)}
+                  className="group relative px-12 py-5 bg-transparent border border-white/20 text-white font-bold uppercase text-[10px] tracking-[0.4em] hover:bg-white hover:text-blue transition-all duration-300"
+                >
+                  <span className="relative z-10">{isGalleryExpanded ? 'Zwiń Galerię' : 'Rozwiń Galerię'}</span>
+                  <div className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-gold transition-all duration-500 group-hover:w-full`} />
+                </button>
+              </div>
+            )}
           </div>
         </section>
 
